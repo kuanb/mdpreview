@@ -8,6 +8,7 @@ Type markdown on the **left**, see the rendered output on the **right**.
 - GitHub-flavored markdown
 - Live preview as you type
 - Dark and light themes
+- Mermaid diagram support (fenced \`\`\`mermaid blocks)
 - Works offline after first load
 
 ## Example

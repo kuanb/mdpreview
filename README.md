@@ -7,6 +7,7 @@ A minimal single-page markdown live preview — like [markdownlivepreview.com](h
 - Live side-by-side markdown editor and preview
 - GitHub-flavored markdown via [marked](https://github.com/markedjs/marked)
 - HTML sanitization via [DOMPurify](https://github.com/cure53/DOMPurify)
+- [Mermaid](https://mermaid.js.org/) diagram rendering from fenced ` ```mermaid ` blocks, themed with the app
 - Dark / light theme toggle (dark by default)
 - Content and theme persisted in `localStorage`
 - Copy rendered HTML to clipboard
