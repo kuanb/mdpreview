@@ -1,0 +1,204 @@
+:root {
+  --bg: #ffffff;
+  --bg-elev: #f5f5f7;
+  --bg-code: #f0f0f3;
+  --fg: #1b1b1f;
+  --fg-muted: #57575c;
+  --border: #d8d8dd;
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+  --blockquote: #6b6b70;
+}
+
+[data-theme="dark"] {
+  --bg: #111214;
+  --bg-elev: #1a1b1e;
+  --bg-code: #232428;
+  --fg: #e8e8ea;
+  --fg-muted: #9a9aa0;
+  --border: #2a2b2f;
+  --accent: #60a5fa;
+  --accent-fg: #0b0c0e;
+  --blockquote: #9a9aa0;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elev);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+.controls button {
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.controls button:hover {
+  border-color: var(--accent);
+}
+
+#theme-btn {
+  min-width: 36px;
+  padding: 6px 8px;
+}
+
+main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 0;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--border);
+}
+
+.pane:last-child { border-right: none; }
+
+.pane-header {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elev);
+}
+
+#editor {
+  flex: 1;
+  width: 100%;
+  padding: 16px 20px;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.55;
+  border: none;
+  resize: none;
+  outline: none;
+  background: var(--bg);
+  color: var(--fg);
+  tab-size: 2;
+}
+
+#preview {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+  line-height: 1.6;
+}
+
+#preview h1, #preview h2, #preview h3,
+#preview h4, #preview h5, #preview h6 {
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+}
+
+#preview h1 { font-size: 1.9em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
+#preview h2 { font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
+#preview h3 { font-size: 1.2em; }
+
+#preview p { margin: 0.8em 0; }
+
+#preview a { color: var(--accent); text-decoration: none; }
+#preview a:hover { text-decoration: underline; }
+
+#preview code {
+  background: var(--bg-code);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
+
+#preview pre {
+  background: var(--bg-code);
+  padding: 14px 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+#preview pre code {
+  background: transparent;
+  padding: 0;
+  font-size: 0.88em;
+}
+
+#preview blockquote {
+  border-left: 3px solid var(--border);
+  margin: 1em 0;
+  padding: 0.2em 1em;
+  color: var(--blockquote);
+}
+
+#preview ul, #preview ol { padding-left: 1.6em; }
+#preview li { margin: 0.25em 0; }
+
+#preview table {
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+#preview th, #preview td {
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+}
+
+#preview th { background: var(--bg-elev); }
+
+#preview img { max-width: 100%; height: auto; }
+
+#preview hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5em 0;
+}
+
+@media (max-width: 720px) {
+  main { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+  .pane { border-right: none; border-bottom: 1px solid var(--border); }
+  .pane:last-child { border-bottom: none; }
+}
