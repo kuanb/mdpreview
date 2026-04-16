@@ -36,6 +36,15 @@ function greet(name) {
 - [x] See preview
 - [ ] Profit
 
+### Mermaid diagram
+
+\`\`\`mermaid
+graph LR
+  A[Write markdown] --> B{Render}
+  B -->|plain| C[HTML]
+  B -->|fenced| D[Diagram]
+\`\`\`
+
 ---
 
 [Learn more about Markdown](https://www.markdownguide.org/).
@@ -59,9 +68,45 @@ function greet(name) {
     mangle: false,
   });
 
-  function render() {
+  let mermaidSeq = 0;
+
+  function initMermaid(theme) {
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: theme === "dark" ? "dark" : "default",
+      fontFamily: 'inherit',
+    });
+  }
+
+  async function render() {
     const raw = marked.parse(editor.value);
-    preview.innerHTML = DOMPurify.sanitize(raw);
+    preview.innerHTML = DOMPurify.sanitize(raw, { ADD_ATTR: ["class"] });
+
+    const blocks = preview.querySelectorAll("pre > code.language-mermaid");
+    if (!blocks.length) return;
+
+    const targets = [];
+    blocks.forEach((code) => {
+      const pre = code.parentElement;
+      const wrap = document.createElement("div");
+      wrap.className = "mermaid";
+      wrap.id = `mermaid-${++mermaidSeq}`;
+      wrap.textContent = code.textContent;
+      pre.replaceWith(wrap);
+      targets.push(wrap);
+    });
+
+    try {
+      await mermaid.run({ nodes: targets });
+    } catch (err) {
+      targets.forEach((el) => {
+        if (!el.querySelector("svg")) {
+          el.classList.add("mermaid-error");
+          el.textContent = `Mermaid error: ${err.message || err}`;
+        }
+      });
+    }
   }
 
   function save() {
@@ -71,6 +116,7 @@ function greet(name) {
   function applyTheme(theme) {
     document.body.setAttribute("data-theme", theme);
     themeBtn.textContent = theme === "dark" ? "☀️" : "🌙";
+    initMermaid(theme);
     try { localStorage.setItem(STORAGE.theme, theme); } catch (_) {}
   }
 
@@ -94,6 +140,7 @@ function greet(name) {
   themeBtn.addEventListener("click", () => {
     const next = document.body.getAttribute("data-theme") === "dark" ? "light" : "dark";
     applyTheme(next);
+    render();
   });
 
   resetBtn.addEventListener("click", () => {
