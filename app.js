@@ -61,6 +61,7 @@ graph LR
   const themeBtn = document.getElementById("theme-btn");
   const resetBtn = document.getElementById("reset-btn");
   const copyBtn = document.getElementById("copy-btn");
+  const pdfBtn = document.getElementById("pdf-btn");
 
   marked.setOptions({
     gfm: true,
@@ -149,6 +150,56 @@ graph LR
       editor.value = DEFAULT_MD;
       render();
       save();
+    }
+  });
+
+  pdfBtn.addEventListener("click", async () => {
+    if (typeof html2pdf === "undefined") {
+      alert("PDF library failed to load.");
+      return;
+    }
+    const originalText = pdfBtn.textContent;
+    pdfBtn.textContent = "Exporting…";
+    pdfBtn.disabled = true;
+
+    const originalTheme = document.body.getAttribute("data-theme");
+    const needsSwap = originalTheme === "dark";
+
+    let wrapper;
+    try {
+      if (needsSwap) {
+        document.body.classList.add("pdf-exporting");
+        applyTheme("light");
+        await render();
+      }
+
+      const clone = preview.cloneNode(true);
+      clone.style.overflow = "visible";
+      clone.style.maxHeight = "none";
+      wrapper = document.createElement("div");
+      wrapper.style.cssText = "position:fixed;left:-10000px;top:0;width:7in;background:#ffffff;";
+      wrapper.appendChild(clone);
+      document.body.appendChild(wrapper);
+
+      await html2pdf().set({
+        margin: 0.75,
+        filename: "markdown.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, backgroundColor: "#ffffff", useCORS: true },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+        pagebreak: { mode: ["css", "legacy"] },
+      }).from(clone).save();
+    } catch (err) {
+      alert(`PDF export failed: ${err.message || err}`);
+    } finally {
+      if (wrapper) wrapper.remove();
+      if (needsSwap) {
+        applyTheme(originalTheme);
+        await render();
+        document.body.classList.remove("pdf-exporting");
+      }
+      pdfBtn.textContent = originalText;
+      pdfBtn.disabled = false;
     }
   });
 
